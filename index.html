@@ -76,59 +76,66 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
     <script>
-        function playVideo(videoId) {
-            var video = document.getElementById(videoId);
-            video.play();
-        }
-    
-        document.addEventListener('DOMContentLoaded', function () {
-            var banner = document.querySelector('.banner');
-            var interactiveVideo = document.getElementById('interactiveVideo');
-            var whiteBar = document.querySelector('.white-bar');
-            var isDragging = false;
-    
-            banner.addEventListener('mousemove', handleInteraction);
-            banner.addEventListener('touchmove', handleInteraction);
-    
-            banner.addEventListener('mousedown', function () {
-                isDragging = true;
-            });
-            banner.addEventListener('touchstart', function () {
-                isDragging = true;
-            });
-    
-            document.addEventListener('mouseup', function () {
-                isDragging = false;
-            });
-            document.addEventListener('touchend', function () {
-                isDragging = false;
-            });
-    
-            function handleInteraction(e) {
-                if (isDragging) {
-                    e.preventDefault();
-                    var yPos = e.clientY || e.touches[0].clientY;
-                    var rect = banner.getBoundingClientRect();
-                    yPos -= rect.top;
-                    yPos = Math.max(0, Math.min(yPos, banner.offsetHeight));
-                    gsap.to(interactiveVideo, {
-                        duration: 0.4,
-                        opacity: 1,
-                        top: yPos - (interactiveVideo.offsetHeight / 240)
-                    });
-                    gsap.to(whiteBar, {
-                        duration: 0.4,
-                        top: yPos - (whiteBar.offsetHeight / 2)
-                    });
-                }
-            }
-    
-            banner.addEventListener('mouseleave', function () {
-                gsap.to(interactiveVideo, { duration: 0.4, opacity: 0 });
-                gsap.to(whiteBar, { duration: 0.4, top: -40 });
-            });
+    function playVideo(videoId) {
+        var video = document.getElementById(videoId);
+        video.play();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var banner = document.querySelector('.banner');
+        var interactiveVideo = document.getElementById('interactiveVideo');
+        var whiteBar = document.querySelector('.white-bar');
+        var isDragging = false;
+
+        banner.addEventListener('mousemove', handleInteraction);
+        banner.addEventListener('touchmove', handleInteraction);
+
+        banner.addEventListener('mousedown', function () {
+            isDragging = true;
         });
-    </script>
+        banner.addEventListener('touchstart', function (e) {
+            isDragging = true;
+            // Prevent default touch event behavior
+            e.preventDefault();
+        });
+
+        document.addEventListener('mouseup', function () {
+            isDragging = false;
+        });
+        document.addEventListener('touchend', function () {
+            isDragging = false;
+        });
+
+        function handleInteraction(e) {
+            if (isDragging) {
+                var yPos;
+                if (e.type === 'mousemove') {
+                    yPos = e.clientY;
+                } else if (e.type === 'touchmove') {
+                    yPos = e.touches[0].clientY;
+                }
+                var rect = banner.getBoundingClientRect();
+                yPos -= rect.top;
+                yPos = Math.max(0, Math.min(yPos, banner.offsetHeight));
+                gsap.to(interactiveVideo, {
+                    duration: 0.4,
+                    opacity: 1,
+                    top: yPos - (interactiveVideo.offsetHeight / 240)
+                });
+                gsap.to(whiteBar, {
+                    duration: 0.4,
+                    top: yPos - (whiteBar.offsetHeight / 2)
+                });
+            }
+        }
+
+        banner.addEventListener('mouseleave', function () {
+            gsap.to(interactiveVideo, { duration: 0.4, opacity: 0 });
+            gsap.to(whiteBar, { duration: 0.4, top: -40 });
+        });
+    });
+</script>
+
     
     
 
