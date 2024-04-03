@@ -1,39 +1,121 @@
-<script>
-    function playVideo(videoId) {
-        var video = document.getElementById(videoId);
-        video.play();
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var banner = document.querySelector('.banner');
-        var interactiveVideo = document.getElementById('interactiveVideo');
-        var whiteBar = document.querySelector('.white-bar');
-
-        banner.addEventListener('mousemove', function (e) {
-            handleBannerInteraction(e.clientY);
-        });
-
-        banner.addEventListener('touchmove', function (e) {
-            var touch = e.touches[0];
-            var yPos = touch.clientY - banner.getBoundingClientRect().top;
-            handleBannerInteraction(yPos);
-        });
-
-        function handleBannerInteraction(yPos) {
-            gsap.to(interactiveVideo, {
-                duration: 0.4,
-                opacity: 1,
-                top: yPos - (interactiveVideo.offsetHeight / 240)
-            });
-            gsap.to(whiteBar, {
-                duration: 0.4,
-                top: yPos - (whiteBar.offsetHeight / 2)
-            });
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Banner</title>
+    <style>
+        .banner {
+            width: 300px;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
         }
 
-        banner.addEventListener('mouseleave', function () {
-            gsap.to(interactiveVideo, { duration: 0.4, opacity: 0 });
-            gsap.to(whiteBar, { duration: 0.4, top: -40 });
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #mainVideo {
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+
+        .white-bar {
+            position: absolute;
+            border-bottom: 30px solid #b3e8f8;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            height: 0;
+            width: 50px;
+            top: -100px;
+            left: 40%;
+            z-index: 2;
+            /* Ensure the white bar is on top */
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+        @media screen and (max-width: 480px) {
+            .banner{
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="banner">
+        <video id="mainVideo" loop autoplay muted>
+            <source src="./video1.mp4" type="video/mp4">
+        </video>
+        <div class="white-bar"></div>
+        <video id="interactiveVideo" class="overlay-video" autoplay muted loop>
+            <source src="./video2.mp4" type="video/mp4">
+        </video>
+        <!--   <div class="play-button" onclick="playVideo('mainVideo')">Play Main Video</div>
+  <div class="play-button" onclick="playVideo('interactiveVideo')">Play Interactive Video</div> -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+    <script>
+        function playVideo(videoId) {
+            var video = document.getElementById(videoId);
+            video.play();
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            var banner = document.querySelector('.banner');
+            var interactiveVideo = document.getElementById('interactiveVideo');
+            var whiteBar = document.querySelector('.white-bar');
+    
+            banner.addEventListener('mousemove', function (e) {
+                handleBannerInteraction(e.clientY);
+            });
+    
+            banner.addEventListener('touchmove', function (e) {
+                var touch = e.touches[0];
+                var yPos = touch.clientY - banner.getBoundingClientRect().top;
+                handleBannerInteraction(yPos);
+            });
+    
+            function handleBannerInteraction(yPos) {
+                gsap.to(interactiveVideo, {
+                    duration: 0.4,
+                    opacity: 1,
+                    top: yPos - (interactiveVideo.offsetHeight / 240)
+                });
+                gsap.to(whiteBar, {
+                    duration: 0.4,
+                    top: yPos - (whiteBar.offsetHeight / 2)
+                });
+            }
+    
+            banner.addEventListener('mouseleave', function () {
+                gsap.to(interactiveVideo, { duration: 0.4, opacity: 0 });
+                gsap.to(whiteBar, { duration: 0.4, top: -40 });
+            });
         });
-    });
-</script>
+    </script>
+    
+
+</body>
+
+</html>
